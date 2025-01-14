@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -35,7 +36,9 @@ public class CustomerService {
     }
 
     public Customer getOne(Long id) {
-        return customerRepository.findById(id).orElse(null);
+        return customerRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("customer_not_found"));
     }
 
     @Transactional
@@ -63,5 +66,11 @@ public class CustomerService {
         Pageable pageable = PageRequest.of(paging.getPage() - 1, paging.getSize(), Sort.by("id").ascending());
         String searchText = "%" + searchCustomer.getSearchText() + "%";
         return customerRepository.searchCustomers(searchText, pageable);
+    }
+
+    public Page<Customer> searchNative(SearchCustomer searchCustomer, Paging paging) {
+        Pageable pageable = PageRequest.of(paging.getPage() - 1, paging.getSize(), Sort.by("customer_id").ascending());
+        String searchText = "%" + searchCustomer.getSearchText() + "%";
+        return customerRepository.searchCustomersViaNativeQuery(searchText, pageable);
     }
 }
