@@ -13,15 +13,22 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_customer_id_seq")
     @Column(name = "customer_id")
     private Long id;
-    @Column(name = "first_name")
+
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+
     @Column(name = "last_name")
     private String lastName;
+
     @Column(name = "create_date")
     private Date createDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @Column(name = "phone")
+    private String phone;
 
     public Long getId() {
         return id;
@@ -61,5 +68,13 @@ public class Customer {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
