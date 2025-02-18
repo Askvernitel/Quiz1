@@ -30,6 +30,9 @@ public class Customer {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "active")
+    private Integer active = 1;
+
     public Long getId() {
         return id;
     }
@@ -76,5 +79,13 @@ public class Customer {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
     }
 }
