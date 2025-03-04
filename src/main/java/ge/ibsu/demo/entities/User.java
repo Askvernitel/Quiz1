@@ -1,5 +1,6 @@
 package ge.ibsu.demo.entities;
 
+import ge.ibsu.demo.entities.enums.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,10 +29,14 @@ public class User implements UserDetails {
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return role != null ? role.getAuthorities() : null;
     }
 
     @Override
@@ -98,5 +103,13 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

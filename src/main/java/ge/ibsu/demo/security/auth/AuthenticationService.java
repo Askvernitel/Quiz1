@@ -5,6 +5,8 @@ import ge.ibsu.demo.repositories.UserRepository;
 import ge.ibsu.demo.security.config.JwtService;
 import ge.ibsu.demo.util.GeneralUtil;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,20 @@ public class AuthenticationService {
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
 
+        return new AuthenticationResponse(jwtToken);
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationData data) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        data.getUserName(),
+                        data.getPassword())
+        );
+        var user = repository.findByEmail(data.getUserName())
+                .orElseThrow(
+                    () ->  new UsernameNotFoundException("USER_NOT_FOUND")
+                );
+        var jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
 }

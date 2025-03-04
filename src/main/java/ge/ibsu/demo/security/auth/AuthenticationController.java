@@ -22,4 +22,11 @@ public class AuthenticationController {
     ) throws Exception {
         return ResponseEntity.ok(service.register(request));
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> login(
+            @RequestBody AuthenticationData request
+    ) throws Exception {
+        return ResponseEntity.ok(service.authenticate(request));
+    }
 }

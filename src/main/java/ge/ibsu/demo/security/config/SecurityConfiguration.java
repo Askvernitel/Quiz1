@@ -12,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static ge.ibsu.demo.entities.enums.Permission.CUSTOMER_READ;
+
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +36,7 @@ public class SecurityConfiguration {
                         authRequest
                                 .requestMatchers("/api/v1/auth/**") //Whitelist
                                 .permitAll()
+                                //.requestMatchers(HttpMethod.GET, "/api/customer/**").hasAnyAuthority(CUSTOMER_READ.getKeyword())
                                 .anyRequest()
                                 .authenticated()
                 )
