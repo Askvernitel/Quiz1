@@ -1,6 +1,7 @@
 package ge.ibsu.demo.services;
 
 import ge.ibsu.demo.dto.AddCustomer;
+import ge.ibsu.demo.dto.GetCustomer;
 import ge.ibsu.demo.dto.Paging;
 import ge.ibsu.demo.dto.SearchCustomer;
 import ge.ibsu.demo.dto.projections.CustomerFullInfo;
@@ -31,7 +32,7 @@ public class CustomerService {
     private final AddressRepository addressRepository;
 
     public CustomerService(CustomerRepository customerRepository,
-                           AddressRepository addressRepository) {
+            AddressRepository addressRepository) {
         this.customerRepository = customerRepository;
         this.addressRepository = addressRepository;
     }
@@ -52,8 +53,8 @@ public class CustomerService {
         if (id != null) {
             customer.setId(id);
         }
-//        customer.setFirstName(addCustomer.getFirstName());
-//        customer.setLastName(addCustomer.getLastName());
+        // customer.setFirstName(addCustomer.getFirstName());
+        // customer.setLastName(addCustomer.getLastName());
         GeneralUtil.getCopyOf(addCustomer, customer);
         customer.setCreateDate(new Date());
 
@@ -92,7 +93,6 @@ public class CustomerService {
         return customerRepository.findAllByActive(1, CustomerPhoneInfo.class);
     }
 
-
     public List<CustomerFullName> searchCustomerFullNames() {
         return customerRepository.findAllByActive(1, CustomerFullName.class);
     }
@@ -101,5 +101,10 @@ public class CustomerService {
         Pageable pageable = PageRequest.of(paging.getPage() - 1, paging.getSize(), Sort.by("id").ascending());
         String searchText = "%" + searchCustomer.getSearchText() + "%";
         return customerRepository.searchCustomerFullInfo(searchText, pageable);
+    }
+
+    public Page<GetCustomer> getCustomerPage(Paging paging) {
+        Pageable pageable = PageRequest.of(paging.getPage() - 1, paging.getSize(), Sort.by("id").descending());
+        return customerRepository.searchAllCustomer(pageable);
     }
 }
